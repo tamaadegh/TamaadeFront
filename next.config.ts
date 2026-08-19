@@ -2,6 +2,9 @@ import type { NextConfig } from "next";
 import path from "path";
 
 const nextConfig: NextConfig = {
+  // Emit .next/standalone so the runtime image can boot with `node server.js`
+  // and without node_modules, matching how the other apps on this VPS ship.
+  output: "standalone",
   outputFileTracingRoot: path.join(__dirname),
   images: {
     remotePatterns: [

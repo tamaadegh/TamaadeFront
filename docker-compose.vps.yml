@@ -1,0 +1,32 @@
+# Tamaade storefront - VPS production.
+#
+# NEXT_PUBLIC_* are compiled into the client bundle, so they are build args
+# rather than runtime env: changing the API or site URL requires a rebuild
+#   docker compose -f docker-compose.vps.yml build --no-cache
+#
+# extra_hosts pins api.tamaade.com to this VPS for server-side rendering.
+# tamaade.com's DNS has carried a stale second A record (162.255.119.56, a
+# Namecheap parking address that accepts no HTTPS), and an SSR fetch that
+# resolved to it would hang instead of failing fast. Pinning keeps rendering
+# on this box regardless of what the public zone says.
+services:
+  front:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_API_URL: https://api.tamaade.com
+        NEXT_PUBLIC_SITE_URL: https://www.tamaade.com
+        CACHEBUST: "20260819-01"
+    image: tamaade-front:latest
+    container_name: tamaade-front
+    restart: always
+    ports:
+      - "127.0.0.1:3006:3006"
+    extra_hosts:
+      - "api.tamaade.com:72.60.95.216"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3006/"]
+      interval: 30s
+      timeout: 5s
+      start_period: 40s
+      retries: 3
