@@ -1,14 +1,24 @@
 import type { Product } from "@/types";
 import { resolveMediaUrl } from "@/lib/utils/media";
 
-export function formatPrice(price: string | number): string {
+/** Number.isNaN(undefined) is false, so an absent price used to slip past the
+ *  guard and reach undefined.toFixed() - which threw and blanked the entire page
+ *  behind "Application error". Anything that is not a finite number is money we
+ *  cannot render, so show zero rather than take the page down. */
+function toAmount(price: string | number | null | undefined): number | null {
   const value = typeof price === "string" ? parseFloat(price) : price;
-  if (Number.isNaN(value)) return `GH₵0.00`;
+  if (value == null || !Number.isFinite(value)) return null;
+  return value;
+}
+
+export function formatPrice(price: string | number | null | undefined): string {
+  const value = toAmount(price);
+  if (value === null) return `GH₵0.00`;
   return `GH₵${value.toFixed(2)}`;
 }
-export function formatPricePlain(price: string | number): string {
-  const value = typeof price === "string" ? parseFloat(price) : price;
-  if (Number.isNaN(value)) return "0";
+export function formatPricePlain(price: string | number | null | undefined): string {
+  const value = toAmount(price);
+  if (value === null) return "0";
   return value % 1 === 0 ? String(Math.round(value)) : value.toFixed(2);
 }
 
