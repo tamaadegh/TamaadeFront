@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { AddToCartButton } from "@/components/cart/AddToCartButton";
+import { BrandPlaceholder } from "@/components/layout/BrandPlaceholder";
 import {
   formatPrice,
   getProductDiscountMeta,
@@ -39,9 +40,10 @@ export function ProductCard({ product, variant = "grid" }: ProductCardProps) {
               sizes={variant === "compact" ? "196px" : "(max-width:768px) 50vw, 25vw"}
             />
           ) : (
-            <div className="flex h-full items-center justify-center bg-[#f7f7f7] text-[10px] text-gray-300">
-              {product.name}
-            </div>
+            <BrandPlaceholder
+              alt={product.name}
+              sizes={variant === "compact" ? "196px" : "(max-width:768px) 50vw, 25vw"}
+            />
           )}
           {isNew && (
             <span className="absolute left-2 top-2 rounded px-1.5 py-0.5 text-[10px] font-semibold text-white bg-[#28a745]">
@@ -63,7 +65,7 @@ export function ProductCard({ product, variant = "grid" }: ProductCardProps) {
 
         <div className="flex flex-1 flex-col px-2.5 pb-2 pt-2">
           <p className="line-clamp-2 text-[11px] leading-snug text-gray-900 sm:text-xs">
-            <span className="font-bold uppercase">{brand}</span>{" "}
+            {brand ? <span className="font-bold uppercase">{brand} </span> : null}
             <span className="font-normal">{product.name}</span>
           </p>
 

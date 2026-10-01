@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ShoppingCart, X } from "lucide-react";
+import { BrandPlaceholder } from "@/components/layout/BrandPlaceholder";
 import { formatPriceDisplay } from "@/lib/utils/productDetail";
 import { getProductDiscountMeta, getProductImageUrl } from "@/lib/utils/product";
 import type { Product } from "@/types";
@@ -43,8 +44,10 @@ export function AddToBasketDrawer({
         <div className="flex-1 overflow-y-auto px-4 py-4">
           <div className="flex gap-3 border-b border-gray-100 pb-4">
             <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded border border-gray-200 bg-gray-50">
-              {imageUrl && (
+              {imageUrl ? (
                 <Image src={imageUrl} alt={product.name} fill className="object-contain p-1" sizes="64px" />
+              ) : (
+                <BrandPlaceholder alt={product.name} sizes="64px" />
               )}
             </div>
             <div>
@@ -80,8 +83,10 @@ export function AddToBasketDrawer({
                   return (
                     <li key={item.id} className="flex gap-3">
                       <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded border border-gray-200 bg-gray-50">
-                        {img && (
+                        {img ? (
                           <Image src={img} alt={item.name} fill className="object-contain p-1" sizes="56px" />
+                        ) : (
+                          <BrandPlaceholder alt={item.name} sizes="56px" />
                         )}
                       </div>
                       <div className="min-w-0 flex-1">

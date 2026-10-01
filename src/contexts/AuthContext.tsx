@@ -13,6 +13,7 @@ import {
   getCurrentUser,
   login as apiLogin,
   logout as apiLogout,
+  deleteAccount as apiDeleteAccount,
   clearStoredToken,
   getStoredToken,
 } from "@/lib/api/auth";
@@ -23,6 +24,8 @@ type AuthContextValue = {
   loading: boolean;
   login: (credentials: LoginCredentials) => Promise<void>;
   logout: () => Promise<void>;
+  /** Permanently deletes the account; on success the session is cleared (cart resets with it). */
+  deleteAccount: (password: string) => Promise<string | undefined>;
   refreshUser: () => Promise<void>;
 };
 
@@ -69,9 +72,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   }, []);
 
+  const deleteAccount = useCallback(async (password: string) => {
+    const result = await apiDeleteAccount(password);
+    setUser(null);
+    return result?.detail;
+  }, []);
+
   const value = useMemo(
-    () => ({ user, loading, login, logout, refreshUser }),
-    [user, loading, login, logout, refreshUser],
+    () => ({ user, loading, login, logout, deleteAccount, refreshUser }),
+    [user, loading, login, logout, deleteAccount, refreshUser],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

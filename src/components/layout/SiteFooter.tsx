@@ -1,14 +1,15 @@
 import Link from "next/link";
-import { siteConfig } from "@/config/site";
+import { getWhatsAppUrl, siteConfig } from "@/config/site";
 import { SiteLogo } from "./SiteLogo";
 import type { NavLink } from "@/types";
 
 export function SiteFooter({ navLinks = [] }: { navLinks?: NavLink[] }) {
+  const whatsappUrl = getWhatsAppUrl();
   return (
     <footer className="mt-8 border-t border-[var(--border)] bg-white pb-20 md:pb-0">
       <div className="mx-auto grid max-w-7xl gap-8 px-4 py-10 md:grid-cols-4">
         <div>
-          <SiteLogo className="h-10 w-auto" />
+          <SiteLogo cropped className="h-12 rounded-md" />
           <p className="mt-2 text-sm text-[var(--muted)]">{siteConfig.tagline}</p>
         </div>
         <div>
@@ -33,17 +34,20 @@ export function SiteFooter({ navLinks = [] }: { navLinks?: NavLink[] }) {
           <h3 className="font-semibold text-gray-900">Help</h3>
           <ul className="mt-3 space-y-2 text-sm text-[var(--muted)]">
             <li><Link href="/help" className="hover:text-[var(--ishtari-red)]">Help Center</Link></li>
-            <li>
-              <a
-                href={`https://wa.me/${siteConfig.whatsapp.replace("+", "")}`}
-                className="hover:text-[var(--ishtari-red)]"
-                target="_blank"
-                rel="noreferrer"
-              >
-                Contact us on WhatsApp
-              </a>
-            </li>
-            <li><Link href="/visual-search" className="hover:text-[var(--ishtari-red)]">Visual Search</Link></li>
+            {whatsappUrl ? (
+              <li>
+                <a
+                  href={whatsappUrl}
+                  className="hover:text-[var(--ishtari-red)]"
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  Contact us on WhatsApp
+                </a>
+              </li>
+            ) : null}
+            <li><Link href="/privacy" className="hover:text-[var(--ishtari-red)]">Privacy Policy</Link></li>
+            <li><Link href="/account/delete" className="hover:text-[var(--ishtari-red)]">Delete my account</Link></li>
           </ul>
         </div>
       </div>
@@ -65,7 +69,10 @@ export function SiteFooter({ navLinks = [] }: { navLinks?: NavLink[] }) {
       )}
 
       <div className="border-t border-[var(--border)] py-4 text-center text-xs text-[var(--muted)]">
-        &copy; {new Date().getFullYear()} {siteConfig.name}.
+        &copy; {new Date().getFullYear()} {siteConfig.name}.{" "}
+        <Link href="/privacy" className="hover:text-[var(--ishtari-red)] hover:underline">
+          Privacy Policy
+        </Link>
       </div>
     </footer>
   );

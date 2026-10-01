@@ -93,6 +93,13 @@ export function RegisterForm() {
           >
             {submitting ? "Creating…" : "Register"}
           </button>
+          <p className="text-center text-xs text-[var(--muted)]">
+            By creating an account you agree to our{" "}
+            <Link href="/privacy" className="font-medium text-[var(--ishtari-red)] hover:underline">
+              Privacy Policy
+            </Link>
+            .
+          </p>
         </form>
 
         <p className="mt-4 text-center text-sm text-[var(--muted)]">

@@ -2,14 +2,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { siteConfig } from "@/config/site";
 
-const LOGO_WIDTH = 1024;
-const LOGO_HEIGHT = 576;
+/** Source artwork: 1920x1080, wordmark spans ~x 477–1398, y 402–640 on solid green. */
+const LOGO_WIDTH = 1920;
+const LOGO_HEIGHT = 1080;
+
+/** Crop window around the wordmark (with a little breathing room). */
+const CROP = { x: 430, y: 360, width: 1020, height: 320 } as const;
+
+const pct = (value: number) => `${(value * 100).toFixed(4)}%`;
 
 type SiteLogoProps = {
   className?: string;
   priority?: boolean;
   linked?: boolean;
-  /** Zoom into center — trims empty padding in the logo PNG */
+  /** Show only the wordmark area of the artwork (trims the large green margins). Set a height via className. */
   cropped?: boolean;
 };
 
@@ -21,22 +27,28 @@ export function SiteLogo({
 }: SiteLogoProps) {
   const image = cropped ? (
     <span
-      className={`relative inline-flex shrink-0 overflow-hidden ${className}`}
-      style={{ aspectRatio: `${LOGO_WIDTH / LOGO_HEIGHT}` }}
+      className={`relative inline-block shrink-0 overflow-hidden bg-[#365944] ${className}`}
+      style={{ aspectRatio: `${CROP.width} / ${CROP.height}` }}
     >
       <Image
         src={siteConfig.logoSrc}
-        alt="Tamaade"
+        alt={siteConfig.name}
         width={LOGO_WIDTH}
         height={LOGO_HEIGHT}
-        className="absolute left-1/2 top-1/2 h-[230%] w-auto max-w-none -translate-x-1/2 -translate-y-1/2"
+        sizes="(max-width: 768px) 720px, 960px"
+        className="absolute h-auto max-w-none"
+        style={{
+          width: pct(LOGO_WIDTH / CROP.width),
+          left: pct(-CROP.x / CROP.width),
+          top: pct(-CROP.y / CROP.height),
+        }}
         priority={priority}
       />
     </span>
   ) : (
     <Image
       src={siteConfig.logoSrc}
-      alt="Tamaade"
+      alt={siteConfig.name}
       width={LOGO_WIDTH}
       height={LOGO_HEIGHT}
       className={`object-contain ${className}`}

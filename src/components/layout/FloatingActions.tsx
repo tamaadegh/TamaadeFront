@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { CircleHelp } from "lucide-react";
-import { siteConfig } from "@/config/site";
+import { CircleHelp, Volume2, VolumeX } from "lucide-react";
+import { getWhatsAppUrl } from "@/config/site";
+import { MUSIC_TOGGLE_ATTR, useBackgroundMusic } from "@/contexts/BackgroundMusicContext";
 
 function WhatsAppIcon() {
   return (
@@ -15,10 +16,31 @@ function WhatsAppIcon() {
   );
 }
 
-/** Ishtari-style stacked help + WhatsApp buttons */
+function MusicToggleButton() {
+  const { available, enabled, toggle } = useBackgroundMusic();
+  if (!available) return null;
+  const Icon = enabled ? Volume2 : VolumeX;
+  return (
+    <button
+      type="button"
+      onClick={toggle}
+      {...{ [MUSIC_TOGGLE_ATTR]: "" }}
+      className="flex h-11 w-11 items-center justify-center rounded-md bg-white shadow-md transition hover:bg-gray-50"
+      aria-label={enabled ? "Mute background music" : "Play background music"}
+      aria-pressed={enabled}
+      title={enabled ? "Mute music" : "Play music"}
+    >
+      <Icon className="h-5 w-5 text-[var(--ishtari-red)]" strokeWidth={1.75} />
+    </button>
+  );
+}
+
+/** Ishtari-style stacked music + help + WhatsApp buttons */
 export function FloatingActions() {
+  const whatsappUrl = getWhatsAppUrl();
   return (
     <div className="fixed bottom-20 right-3 z-50 flex flex-col items-center gap-2 md:bottom-6 md:right-4">
+      <MusicToggleButton />
       <Link
         href="/help"
         className="flex h-11 w-11 items-center justify-center rounded-md bg-[#f3d6d8] shadow-md transition hover:bg-[#ecc4c7]"
@@ -26,15 +48,17 @@ export function FloatingActions() {
       >
         <CircleHelp className="h-5 w-5 text-gray-800" strokeWidth={1.75} />
       </Link>
-      <a
-        href={`https://wa.me/${siteConfig.whatsapp.replace("+", "")}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex h-11 w-11 items-center justify-center rounded-md bg-white shadow-md transition hover:bg-gray-50"
-        aria-label="WhatsApp"
-      >
-        <WhatsAppIcon />
-      </a>
+      {whatsappUrl ? (
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex h-11 w-11 items-center justify-center rounded-md bg-white shadow-md transition hover:bg-gray-50"
+          aria-label="WhatsApp"
+        >
+          <WhatsAppIcon />
+        </a>
+      ) : null}
     </div>
   );
 }

@@ -1,24 +1,17 @@
 import type { Product } from "@/types";
 
+/** Product detail content built only from real API fields (nothing invented). */
 export function getProductOverviewSections(product: Product) {
+  const specifications = [
+    product.brand ? `Brand: ${product.brand}` : null,
+    product.category ? `Category: ${product.category}` : null,
+    product.seller ? `Seller: ${product.seller}` : null,
+    product.quantity > 0 ? `In stock: ${product.quantity} unit(s)` : "Out of stock",
+  ].filter((line): line is string => Boolean(line));
+
   return {
-    features: [
-      `${product.name} is built for everyday use with durable materials.`,
-      "Safe and reliable design suitable for home use.",
-      "Easy to assemble with included instructions.",
-      product.desc,
-    ],
-    specifications: [
-      `Category: ${product.category}`,
-      `Seller: ${product.seller}`,
-      `Stock available: ${product.quantity} unit(s)`,
-      `SKU: TMD-${product.id.toString().padStart(4, "0")}`,
-    ],
-    packageIncluded: [
-      "1 × Main product unit",
-      "1 × User manual",
-      "Standard accessories as shown",
-    ],
+    description: product.desc?.trim() || null,
+    specifications,
   };
 }
 

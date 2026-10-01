@@ -22,15 +22,18 @@ export async function generateMetadata({
 export default async function CategoryPage({ params }: CategoryPageProps) {
   const { id } = await params;
 
+  let categoryName: string | null = null;
   try {
     const categories = await getCategories();
-    const cat = categories.find((c) => String(c.id) === id);
-    if (cat) {
-      redirect(`/products?category=${encodeURIComponent(cat.name)}`);
-    }
+    categoryName = categories.find((c) => String(c.id) === id)?.name ?? null;
   } catch {
-    // fall through
+    categoryName = null;
   }
 
-  redirect("/allcategories");
+  // redirect() throws, so it must stay outside the try/catch above.
+  redirect(
+    categoryName
+      ? `/products?category=${encodeURIComponent(categoryName)}`
+      : "/allcategories",
+  );
 }

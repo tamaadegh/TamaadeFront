@@ -16,8 +16,9 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   icons: {
-    icon: siteConfig.logoSrc,
-    apple: siteConfig.logoSrc,
+    icon: [{ url: siteConfig.iconSrc, sizes: "512x512", type: "image/png" }],
+    shortcut: siteConfig.iconSrc,
+    apple: [{ url: siteConfig.appleIconSrc, sizes: "180x180", type: "image/png" }],
   },
 };
 

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { BrandPlaceholder } from "@/components/layout/BrandPlaceholder";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Minus, Plus, ShoppingBag, Trash2 } from "lucide-react";
@@ -95,8 +96,10 @@ export function CartView({ recommended, productMap }: CartViewProps) {
               >
                 <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-md bg-gray-50">
                   {imageUrl ? (
-                    <Image src={imageUrl} alt={product?.name ?? "Product"} fill className="object-contain p-1" />
-                  ) : null}
+                    <Image src={imageUrl} alt={product?.name ?? "Product"} fill className="object-contain p-1" sizes="80px" />
+                  ) : (
+                    <BrandPlaceholder alt={product?.name ?? "Product"} sizes="80px" />
+                  )}
                 </div>
                 <div className="flex flex-1 flex-col">
                   <Link
@@ -165,6 +168,15 @@ export function CartView({ recommended, productMap }: CartViewProps) {
             {paying ? "Redirecting…" : "Checkout"}
           </button>
         </div>
+        {itemCount > 0 && (
+          <p className="mt-3 text-right text-xs text-[var(--muted)]">
+            By continuing to checkout you agree to our{" "}
+            <Link href="/privacy" className="font-medium text-[var(--ishtari-red)] hover:underline">
+              Privacy Policy
+            </Link>
+            .
+          </p>
+        )}
         {payError && (
           <p className="mt-3 text-sm text-red-600">{payError}</p>
         )}

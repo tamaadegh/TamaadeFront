@@ -200,3 +200,21 @@ export interface RegisterPayload {
   first_name: string;
   last_name: string;
 }
+
+export interface PrivacyPolicy {
+  title: string;
+  content: string;
+  updated_at: string;
+}
+
+export interface BackgroundMusicTrack {
+  id: number;
+  title: string;
+  url: string;
+  volume: number;
+}
+
+export interface BackgroundMusicConfig {
+  enabled: boolean;
+  track: BackgroundMusicTrack | null;
+}

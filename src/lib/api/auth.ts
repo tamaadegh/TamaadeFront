@@ -64,3 +64,19 @@ export async function updateProfile(payload: Partial<User>): Promise<User> {
     token: token ?? undefined,
   });
 }
+
+/**
+ * Permanently delete the signed-in account (password confirmation required).
+ * 200 → `{ detail }`, 400 → incorrect password, 403 → staff accounts can't self-delete.
+ * The stored token is cleared on success.
+ */
+export async function deleteAccount(password: string): Promise<{ detail?: string }> {
+  const data = await apiClient<{ detail?: string }>("/api/user/delete-account/", {
+    method: "POST",
+    body: { password },
+    credentials: "include",
+    token: getStoredToken() ?? undefined,
+  });
+  clearStoredToken();
+  return data;
+}

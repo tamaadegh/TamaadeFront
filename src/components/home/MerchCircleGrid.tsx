@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { BrandPlaceholder } from "@/components/layout/BrandPlaceholder";
 import type { MerchTile } from "@/types";
 
 type MerchCircleGridProps = {
@@ -48,9 +49,7 @@ export function MerchCircleGrid({ tiles, columns = "dense" }: MerchCircleGridPro
                   sizes="84px"
                 />
               ) : (
-                <span className="text-lg font-bold text-[var(--ishtari-red)]">
-                  {tile.title.charAt(0)}
-                </span>
+                <BrandPlaceholder alt={tile.title} sizes="84px" />
               )}
               {tile.badge && tile.image ? (
                 <span className="absolute left-0 top-0 rounded-br-md bg-[var(--ishtari-red)] px-1 py-px text-[9px] font-bold text-white">

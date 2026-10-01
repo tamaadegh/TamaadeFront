@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
+import { DeleteAccountSection } from "./DeleteAccountSection";
+import { SettingsSection } from "./SettingsSection";
 
 export function ProfileView() {
   const { user, loading, logout } = useAuth();
@@ -33,6 +35,7 @@ export function ProfileView() {
             </Link>
           </p>
         </div>
+        <SettingsSection />
       </section>
     );
   }
@@ -54,11 +57,11 @@ export function ProfileView() {
 
         <div className="mt-6 space-y-2">
           <Link href="/cart" className="block rounded-md border border-gray-200 px-4 py-3 text-sm hover:border-[var(--ishtari-red)]">
-            Orders / Basket
+            My Basket
           </Link>
-          <Link href="/profile?tab=addresses" className="block rounded-md border border-gray-200 px-4 py-3 text-sm hover:border-[var(--ishtari-red)]">
-            Addresses ({user.addresses?.length ?? 0})
-          </Link>
+          <p className="rounded-md border border-gray-200 px-4 py-3 text-sm text-gray-700">
+            Saved addresses: {user.addresses?.length ?? 0}
+          </p>
         </div>
 
         <button
@@ -69,6 +72,8 @@ export function ProfileView() {
           Sign Out
         </button>
       </div>
+      <SettingsSection />
+      <DeleteAccountSection />
     </section>
   );
 }

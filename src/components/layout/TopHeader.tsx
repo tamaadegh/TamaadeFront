@@ -2,16 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import {
-  Camera,
-  ChevronDown,
-  CircleHelp,
-  Heart,
-  Search,
-  ShoppingCart,
-  User,
-} from "lucide-react";
-import { siteConfig } from "@/config/site";
+import { CircleHelp, Search, ShoppingCart, User } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { AccountDropdown } from "./AccountDropdown";
@@ -30,36 +21,20 @@ export function TopHeader() {
         <SiteLogo
           priority
           cropped
-          className="h-12 w-[7rem] sm:h-[3.25rem] sm:w-[7.75rem] md:h-14 md:w-[8.5rem] lg:h-[3.75rem] lg:w-[9.25rem]"
+          className="h-9 sm:h-10 md:h-11 lg:h-12"
         />
-
-        <button
-          type="button"
-          className="hidden shrink-0 items-center gap-1 rounded-md px-2 py-1 text-xs hover:bg-white/10 md:flex md:text-sm"
-        >
-          <span>🇬🇭</span>
-          <span>{siteConfig.country}</span>
-          <ChevronDown className="h-3.5 w-3.5" />
-        </button>
 
         <form
           action="/products"
           method="get"
           className="flex flex-1 items-center overflow-hidden rounded-md bg-white"
         >
-          <Link
-            href="/visual-search"
-            className="px-2.5 text-gray-400 hover:text-gray-600 md:px-3"
-            aria-label="Visual search"
-          >
-            <Camera className="h-4 w-4 md:h-5 md:w-5" />
-          </Link>
           <input
             name="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="What are you looking for?"
-            className="min-w-0 flex-1 py-2 text-xs text-gray-800 outline-none placeholder:text-gray-400 md:py-2.5 md:text-sm"
+            className="min-w-0 flex-1 py-2 pl-3 text-xs text-gray-800 outline-none placeholder:text-gray-400 md:py-2.5 md:text-sm"
           />
           <button
             type="submit"
@@ -89,19 +64,6 @@ export function TopHeader() {
             <span>Log In</span>
           </Link>
         )}
-
-        <Link
-          href="/profile?tab=wishlist"
-          className="hidden shrink-0 flex-col items-center text-[10px] hover:opacity-90 md:flex"
-        >
-          <span className="relative">
-            <Heart className="h-5 w-5" />
-            <span className="absolute -right-2 -top-1.5 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-[var(--ishtari-blue)] px-1 text-[9px] font-bold text-white">
-              0
-            </span>
-          </span>
-          <span className="mt-0.5">Wishlist</span>
-        </Link>
 
         <Link
           href="/cart"

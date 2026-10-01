@@ -3,44 +3,22 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import {
-  CalendarCheck,
   ChevronDown,
   ChevronUp,
-  Clock,
-  Heart,
-  Lightbulb,
-  MapPin,
-  MessageCircle,
-  MessageSquare,
+  CircleHelp,
   Package,
-  RefreshCw,
-  RotateCcw,
   Shield,
-  Star,
-  Store,
-  Ticket,
   User,
-  Wallet,
+  UserX,
 } from "lucide-react";
 import { accountMenuItems } from "@/config/site";
 
 const iconMap = {
   user: User,
-  shield: Shield,
-  "map-pin": MapPin,
   package: Package,
-  "rotate-ccw": RotateCcw,
-  star: Star,
-  wallet: Wallet,
-  ticket: Ticket,
-  "calendar-check": CalendarCheck,
-  "refresh-cw": RefreshCw,
-  heart: Heart,
-  clock: Clock,
-  "message-square": MessageSquare,
-  "message-circle": MessageCircle,
-  lightbulb: Lightbulb,
-  store: Store,
+  help: CircleHelp,
+  shield: Shield,
+  "user-x": UserX,
 } as const;
 
 type AccountDropdownProps = {

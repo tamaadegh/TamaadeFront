@@ -8,6 +8,7 @@ export {
   getStoredToken,
   storeToken,
   clearStoredToken,
+  deleteAccount,
 } from "./auth";
 export {
   getProducts,
@@ -31,3 +32,4 @@ export {
   addProductToCart,
 } from "./orders";
 export { startHubtelCheckout, getHubtelPaymentStatus } from "./payments";
+export { getPrivacyPolicy, getBackgroundMusic } from "./content";

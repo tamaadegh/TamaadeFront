@@ -60,7 +60,7 @@ export function getProductDiscountMeta(product: Product) {
       originalPrice && originalPrice > price ? originalPrice : null,
     isNew: Boolean(product.is_new),
     promoLabel: product.promo_label?.trim() || null,
-    brand: (product.brand || product.category || "Tamaade").toUpperCase(),
+    brand: (product.brand || "").toUpperCase(),
     isExpress: Boolean(product.is_express),
     saleEndsAt: product.sale_ends_at || null,
   };
@@ -70,8 +70,8 @@ export function productsForSection(
   source: "newest" | "featured" | "bestsellers",
   products: Product[],
 ): Product[] {
-  const newest = sortProductsByDate(products);
-  if (source === "newest") return newest.slice(0, 12);
-  if (source === "bestsellers") return [...products].reverse().slice(0, 12);
+  // No sales data exists in the API, so "featured"/"bestsellers" use the API order as-is
+  // (no client-side reshuffling that would pretend to rank by sales).
+  if (source === "newest") return sortProductsByDate(products).slice(0, 12);
   return products.slice(0, 12);
 }

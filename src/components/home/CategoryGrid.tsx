@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { BrandPlaceholder } from "@/components/layout/BrandPlaceholder";
 import { getCategoryIconUrl } from "@/lib/utils/product";
 import type { ProductCategory } from "@/types";
 
@@ -31,9 +32,7 @@ export function CategoryGrid({ categories }: CategoryGridProps) {
                 {icon ? (
                   <Image src={icon} alt={cat.name} fill className="object-cover" sizes="80px" />
                 ) : (
-                  <span className="text-lg font-bold text-[var(--ishtari-red)]">
-                    {cat.name.charAt(0)}
-                  </span>
+                  <BrandPlaceholder alt={cat.name} sizes="80px" />
                 )}
               </div>
               <span className="line-clamp-2 max-w-[88px] text-[10px] font-normal leading-tight text-gray-900 sm:text-[11px]">

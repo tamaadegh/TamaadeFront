@@ -61,16 +61,12 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
     products = sortProductsByDate(products);
   }
 
-  if (params.filter === "top-selling" || params.filter === "top-picks") {
-    products = [...products].reverse();
-  }
-
   const pageTitle = params.category
     ? decodeURIComponent(params.category)
     : params.search
       ? `Search: ${params.search}`
       : params.maxPrice
-        ? `Under ${params.maxPrice}¢`
+        ? `Under GH₵${params.maxPrice}`
         : "Products";
 
   return (
