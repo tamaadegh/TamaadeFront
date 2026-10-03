@@ -5,10 +5,13 @@ export {
   getCurrentUser,
   logout,
   updateProfile,
+  updateUser,
   getStoredToken,
   storeToken,
   clearStoredToken,
   deleteAccount,
+  requestOtp,
+  verifyOtp,
 } from "./auth";
 export {
   getProducts,

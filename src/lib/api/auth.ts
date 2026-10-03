@@ -1,5 +1,16 @@
 import { apiClient } from "./client";
-import type { AuthTokens, LoginCredentials, RegisterPayload, User } from "@/types";
+import type {
+  AuthTokens,
+  LoginCredentials,
+  OtpRequestPayload,
+  OtpRequestResponse,
+  OtpVerifyPayload,
+  OtpVerifyResponse,
+  RegisterPayload,
+  RegisterResponse,
+  UpdateUserPayload,
+  User,
+} from "@/types";
 
 const TOKEN_KEY = "tamaade-access-token";
 
@@ -27,12 +38,49 @@ export async function login(credentials: LoginCredentials): Promise<AuthTokens> 
   return data;
 }
 
-export async function register(payload: RegisterPayload): Promise<{ detail?: string }> {
-  return apiClient<{ detail?: string }>("/api/user/register/", {
+/**
+ * Send a one-time login code by SMS. 400 → invalid number, 404 `code: "not_registered"`,
+ * 429 `{ retry_after }`, 503 → SMS unavailable.
+ */
+export async function requestOtp(payload: OtpRequestPayload): Promise<OtpRequestResponse> {
+  return apiClient<OtpRequestResponse>("/api/user/otp/request/", {
     method: "POST",
     body: payload,
     credentials: "include",
   });
+}
+
+/** Verify a phone login code (200 `{ access, refresh, user }`); the access token is stored like the email login. */
+export async function verifyOtp(payload: OtpVerifyPayload): Promise<OtpVerifyResponse> {
+  const data = await apiClient<OtpVerifyResponse>("/api/user/otp/verify/", {
+    method: "POST",
+    body: payload,
+    credentials: "include",
+  });
+  if (data.access) storeToken(data.access);
+  return data;
+}
+
+/**
+ * Create an account and sign in (201 `{ access, refresh, user }`); the token is stored like login.
+ * Empty optional fields are omitted. 400 → `{ detail, errors: { email, phone_number, password, non_field_errors } }`.
+ */
+export async function register(payload: RegisterPayload): Promise<RegisterResponse> {
+  const email = payload.email?.trim();
+  const phone = payload.phone_number?.trim();
+  const data = await apiClient<RegisterResponse>("/api/user/register/", {
+    method: "POST",
+    body: {
+      first_name: payload.first_name,
+      last_name: payload.last_name,
+      password: payload.password,
+      ...(email ? { email } : {}),
+      ...(phone ? { phone_number: phone } : {}),
+    },
+    credentials: "include",
+  });
+  if (data.access) storeToken(data.access);
+  return data;
 }
 
 export async function getCurrentUser(): Promise<User> {
@@ -55,6 +103,20 @@ export async function logout(): Promise<void> {
   }
 }
 
+/**
+ * Update name / contact details (`PATCH /api/user/`); returns the updated user.
+ * 400 → `{ detail, errors: { email, phone_number, first_name, ... } }`.
+ */
+export async function updateUser(payload: UpdateUserPayload): Promise<User> {
+  return apiClient<User>("/api/user/", {
+    method: "PATCH",
+    body: payload,
+    credentials: "include",
+    token: getStoredToken() ?? undefined,
+  });
+}
+
+/** Avatar / bio (`/api/user/profile/`). For name and contact details use `updateUser`. */
 export async function updateProfile(payload: Partial<User>): Promise<User> {
   const token = getStoredToken();
   return apiClient<User>("/api/user/profile/", {

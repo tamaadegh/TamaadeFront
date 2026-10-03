@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { DeleteAccountSection } from "./DeleteAccountSection";
+import { EditDetailsSection } from "./EditDetailsSection";
 import { SettingsSection } from "./SettingsSection";
 
 export function ProfileView() {
@@ -46,9 +47,9 @@ export function ProfileView() {
         <h1 className="text-xl font-bold text-gray-900">
           {user.first_name} {user.last_name}
         </h1>
-        <p className="mt-1 text-sm text-[var(--muted)]">{user.email}</p>
+        {user.email && <p className="mt-1 text-sm text-[var(--muted)]">{user.email}</p>}
         {user.phone_number && (
-          <p className="text-sm text-[var(--muted)]">{user.phone_number}</p>
+          <p className={`text-sm text-[var(--muted)] ${user.email ? "" : "mt-1"}`}>{user.phone_number}</p>
         )}
 
         {user.profile?.bio && (
@@ -72,6 +73,7 @@ export function ProfileView() {
           Sign Out
         </button>
       </div>
+      <EditDetailsSection user={user} />
       <SettingsSection />
       <DeleteAccountSection />
     </section>

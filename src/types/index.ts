@@ -170,7 +170,8 @@ export interface Profile {
 
 export interface User {
   id: number;
-  email: string;
+  /** Empty or null for accounts created with a phone number only. */
+  email: string | null;
   phone_number: string | null;
   first_name: string;
   last_name: string;
@@ -192,14 +193,60 @@ export interface LoginCredentials {
   password: string;
 }
 
-export interface RegisterPayload {
+/** OTP is only used for phone login; the server defaults to "login" when omitted. */
+export type OtpPurpose = "login";
+
+export interface OtpRequestPayload {
+  phone_number: string;
+  purpose?: OtpPurpose;
+}
+
+/** 200 from `POST /api/user/otp/request/`. */
+export interface OtpRequestResponse {
+  detail?: string;
+  /** Normalised E.164 number, e.g. "+233241234567". */
+  phone_number: string;
+  /** Seconds until the code expires. */
+  expires_in: number;
+  /** Seconds before another code may be requested. */
+  resend_in: number;
+}
+
+export interface OtpVerifyPayload {
+  phone_number: string;
+  code: string;
+  purpose?: OtpPurpose;
+}
+
+/** Signed-in session returned by OTP verify (200) and register (201). */
+export interface AuthSession {
+  access: string;
+  refresh: string;
+  user: User;
+}
+
+/** 200 from `POST /api/user/otp/verify/`. */
+export type OtpVerifyResponse = AuthSession;
+
+/** `PATCH /api/user/` — send "" to remove email or phone (at least one must remain). */
+export interface UpdateUserPayload {
+  first_name?: string;
+  last_name?: string;
   email?: string;
   phone_number?: string;
-  password1: string;
-  password2: string;
+}
+
+/** `POST /api/user/register/`. At least one of email / phone_number is required. */
+export interface RegisterPayload {
   first_name: string;
   last_name: string;
+  password: string;
+  email?: string;
+  phone_number?: string;
 }
+
+/** 201 from `POST /api/user/register/` — the account is created and signed in. */
+export type RegisterResponse = AuthSession;
 
 export interface PrivacyPolicy {
   title: string;
